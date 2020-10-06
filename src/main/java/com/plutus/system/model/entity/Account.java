@@ -21,4 +21,14 @@ public class Account {
     @NotNull
     // TODO: 10/6/2020 Check if there exists better alternative to storing money
     private BigDecimal money = BigDecimal.ZERO;
+
+    @NotNull
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    private Client owner;
+
+    public void setOwner(Client owner) {
+        this.owner = owner;
+        owner.getAccounts().add(this);
+    }
 }

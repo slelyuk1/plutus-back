@@ -1,7 +1,9 @@
 package com.plutus.system.model.entity;
 
 import com.plutus.system.repository.AccountRepository;
-import com.plutus.system.utils.ConstraintTestUtils;
+import com.plutus.system.utils.AccountUtils;
+import com.plutus.system.utils.ClientUtils;
+import com.plutus.system.utils.ConstraintUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,7 +16,6 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
 public class AccountEntityTest {
-    private static final String TEST_PIN = "1234";
 
     @Autowired
     private TestEntityManager entityManager;
@@ -23,23 +24,26 @@ public class AccountEntityTest {
 
     @Test
     public void testSuccessfulAccountEntryCreation() {
-        Account toCreate = new Account();
-        toCreate.setPin(TEST_PIN);
-        toCreate = entityManager.persist(toCreate);
+        Client testClient = ClientUtils.createTestClientForPersistence();
+        entityManager.persist(testClient);
+        Account persisted = entityManager.persist(AccountUtils.createTestAccountForPersistence(testClient));
         entityManager.flush();
 
-        Account created = repository.getOne(toCreate.getId());
-        assertThat(created).isEqualTo(toCreate);
+        Account fromDatabase = repository.getOne(persisted.getId());
+        assertThat(fromDatabase).isEqualTo(persisted);
     }
 
     @Test
     public void testAccountCreationWithNullPin() {
         ConstraintViolationException e = Assertions.assertThrows(ConstraintViolationException.class, () -> {
+            Client testClient = ClientUtils.createTestClientForPersistence();
+            entityManager.persist(testClient);
             Account toCreate = new Account();
+            toCreate.setOwner(testClient);
             entityManager.persist(toCreate);
             entityManager.flush();
         });
-        assertThat(ConstraintTestUtils.hasSpecifiedConstraintViolation(e, "pin")).isTrue();
+        assertThat(ConstraintUtils.hasSpecifiedConstraintViolation(e, "pin")).isTrue();
     }
 
 }

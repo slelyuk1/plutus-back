@@ -1,7 +1,8 @@
 package com.plutus.system.model.entity;
 
-import com.plutus.system.repository.UserRepository;
-import com.plutus.system.utils.ConstraintTestUtils;
+import com.plutus.system.repository.ClientRepository;
+import com.plutus.system.utils.ClientUtils;
+import com.plutus.system.utils.ConstraintUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,28 +14,22 @@ import javax.validation.ConstraintViolationException;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @DataJpaTest
-public class UserEntityTest {
-    private static final String TEST_NAME = "Test";
-    private static final String TEST_EMAIL = "test@gmail.com";
+public class ClientEntityTest {
     private static final String TEST_INVALID_EMAIL = "test@test.com";
 
     @Autowired
     private TestEntityManager entityManager;
     @Autowired
-    private UserRepository repository;
+    private ClientRepository repository;
 
     @Test
     public void testSuccessfulClientCreation() {
-        Client toCreate = new Client();
-        toCreate.setName(TEST_NAME);
-        toCreate.setSurname(TEST_NAME);
-        toCreate.setEmail(TEST_EMAIL);
-        toCreate = entityManager.persist(toCreate);
+        Client created = entityManager.persist(ClientUtils.createTestClientForPersistence());
         entityManager.flush();
 
-        Client created = repository.getOne(toCreate.getId());
+        Client fromDatabase = repository.getOne(created.getId());
         // TODO: 10/6/2020 test equals method
-        assertThat(created.equals(toCreate)).isTrue();
+        assertThat(created.equals(fromDatabase)).isTrue();
     }
 
     @Test
@@ -45,7 +40,7 @@ public class UserEntityTest {
             entityManager.persist(toCreate);
             entityManager.flush();
         });
-        assertThat(ConstraintTestUtils.hasSpecifiedConstraintViolation(nameException, "name")).isTrue();
+        assertThat(ConstraintUtils.hasSpecifiedConstraintViolation(nameException, "name")).isTrue();
 
 
         ConstraintViolationException surnameException = Assertions.assertThrows(ConstraintViolationException.class, () -> {
@@ -54,20 +49,18 @@ public class UserEntityTest {
             entityManager.persist(toCreate);
             entityManager.flush();
         });
-        assertThat(ConstraintTestUtils.hasSpecifiedConstraintViolation(surnameException, "surname")).isTrue();
+        assertThat(ConstraintUtils.hasSpecifiedConstraintViolation(surnameException, "surname")).isTrue();
     }
 
     @Test
     public void testAccountCreationWithInvalidEmail() {
         ConstraintViolationException e = Assertions.assertThrows(ConstraintViolationException.class, () -> {
-            Client toCreate = new Client();
-            toCreate.setName(TEST_NAME);
-            toCreate.setSurname(TEST_NAME);
+            Client toCreate = ClientUtils.createTestClientForPersistence();
             toCreate.setEmail("TEST_INVALID_EMAIL");
             entityManager.persist(toCreate);
             entityManager.flush();
         });
 
-        assertThat(ConstraintTestUtils.hasSpecifiedConstraintViolation(e, "email")).isTrue();
+        assertThat(ConstraintUtils.hasSpecifiedConstraintViolation(e, "email")).isTrue();
     }
 }
