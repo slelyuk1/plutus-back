@@ -24,11 +24,13 @@ public class Account {
 
     @NotNull
     @ManyToOne(optional = false)
-    @JoinColumn(name = "client_id", referencedColumnName = "id")
+    @JoinColumn(name = "client_id")
     private Client owner;
 
     public void setOwner(Client owner) {
         this.owner = owner;
         owner.getAccounts().add(this);
     }
+
+    // TODO: 10/6/2020 Solve StackOverflow exception when calling toString
 }

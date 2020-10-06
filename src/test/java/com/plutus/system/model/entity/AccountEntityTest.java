@@ -1,6 +1,7 @@
 package com.plutus.system.model.entity;
 
 import com.plutus.system.repository.AccountRepository;
+import com.plutus.system.repository.ClientRepository;
 import com.plutus.system.utils.AccountUtils;
 import com.plutus.system.utils.ClientUtils;
 import com.plutus.system.utils.ConstraintUtils;
@@ -20,7 +21,9 @@ public class AccountEntityTest {
     @Autowired
     private TestEntityManager entityManager;
     @Autowired
-    private AccountRepository repository;
+    private AccountRepository accountRepository;
+    @Autowired
+    private ClientRepository clientRepository;
 
     @Test
     public void testSuccessfulAccountEntryCreation() {
@@ -29,7 +32,7 @@ public class AccountEntityTest {
         Account persisted = entityManager.persist(AccountUtils.createTestAccountForPersistence(testClient));
         entityManager.flush();
 
-        Account fromDatabase = repository.getOne(persisted.getId());
+        Account fromDatabase = accountRepository.getOne(persisted.getId());
         assertThat(fromDatabase).isEqualTo(persisted);
     }
 
@@ -44,6 +47,32 @@ public class AccountEntityTest {
             entityManager.flush();
         });
         assertThat(ConstraintUtils.hasSpecifiedConstraintViolation(e, "pin")).isTrue();
+    }
+
+    @Test
+    public void testAccountCreationWithoutOwner() {
+        ConstraintViolationException e = Assertions.assertThrows(ConstraintViolationException.class, () -> {
+            Account account = new Account();
+            account.setPin(AccountUtils.TEST_PIN);
+            entityManager.persist(account);
+            entityManager.flush();
+        });
+        assertThat(ConstraintUtils.hasSpecifiedConstraintViolation(e, "owner")).isTrue();
+    }
+
+    @Test
+    public void testRelationshipBetweenAccountAndClient() {
+        Client client = ClientUtils.createTestClientForPersistence();
+        Account account = AccountUtils.createTestAccountForPersistence(client);
+        assertThat(client.getAccounts()).contains(account);
+        client = entityManager.persist(client);
+        account = entityManager.persist(account);
+        entityManager.flush();
+
+        Client clientFromDatabase = clientRepository.getOne(client.getId());
+        assertThat(clientFromDatabase.getAccounts()).contains(account);
+        Account accountFromDatabase = accountRepository.getOne(account.getId());
+        assertThat(accountFromDatabase.getOwner()).isEqualTo(client);
     }
 
 }

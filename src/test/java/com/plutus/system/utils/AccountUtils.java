@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 @NoArgsConstructor(access = AccessLevel.PRIVATE)
 public class AccountUtils {
-    private static final String TEST_PIN = "1234";
+    public static final String TEST_PIN = "1234";
 
     public static Account createTestAccountForPersistence(Client owner) {
         Account account = new Account();
