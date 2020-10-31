@@ -1,6 +1,7 @@
 package com.plutus.system.model.entity;
 
 import lombok.Data;
+import lombok.ToString;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -22,6 +23,7 @@ public class Account {
     // TODO: 10/6/2020 Check if there exists better alternative to storing money
     private BigDecimal money = BigDecimal.ZERO;
 
+    @ToString.Exclude
     @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "client_id")

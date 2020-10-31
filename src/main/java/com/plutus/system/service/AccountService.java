@@ -6,9 +6,9 @@ import com.plutus.system.model.entity.Client;
 import java.util.Collection;
 
 public interface AccountService {
-    Account createAccount(Account account);
+    Account create(Account account);
 
     Collection<Account> getClientAccounts(Client client);
 
-    Account getAccountById(Long id);
+    Account getAccountById(long id);
 }
