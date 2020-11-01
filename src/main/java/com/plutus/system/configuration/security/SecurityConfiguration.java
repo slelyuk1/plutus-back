@@ -47,11 +47,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // TODO: 10/18/2020 enable
         http
                 .csrf().csrfTokenRepository(csrfTokenRepositoryBean()).ignoringAntMatchers(TOKEN_ENDPOINT)
                 .and()
-                .cors().disable()
+                .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
