@@ -2,7 +2,6 @@ package com.plutus.system.listener;
 
 import com.plutus.system.model.entity.Account;
 import com.plutus.system.model.entity.Client;
-import com.plutus.system.model.response.AccountInfo;
 import com.plutus.system.repository.AccountRepository;
 import com.plutus.system.repository.ClientRepository;
 import com.plutus.system.service.AccountService;
@@ -13,6 +12,7 @@ import org.springframework.context.ApplicationListener;
 import org.springframework.context.annotation.Profile;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.data.domain.Example;
+import org.springframework.lang.NonNull;
 import org.springframework.stereotype.Component;
 
 
@@ -20,10 +20,11 @@ import org.springframework.stereotype.Component;
 @Component
 @Slf4j
 @RequiredArgsConstructor
-public class ApplicationStartupListener implements ApplicationListener<ContextRefreshedEvent> {
+public class CreateTestClientOnApplicationStartupListener implements ApplicationListener<ContextRefreshedEvent> {
 
     public static final String CLIENT_TEST_NAME_OR_SURNAME = "Test";
     public static final String CLIENT_TEST_EMAIL = "test@gmail.com";
+    public static final String TEST_NUMBER = "1234123412341234";
     public static final String TEST_PIN = "1234";
 
     private final ClientService clientService;
@@ -32,7 +33,7 @@ public class ApplicationStartupListener implements ApplicationListener<ContextRe
     private final AccountRepository accountRepository;
 
     @Override
-    public void onApplicationEvent(ContextRefreshedEvent event) {
+    public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
         final Client clientToCreate = createTestClientForPersistence();
         Client createdClient = clientRepository.findOne(Example.of(clientToCreate))
                 .orElseGet(() -> clientService.create(clientToCreate));
@@ -53,6 +54,7 @@ public class ApplicationStartupListener implements ApplicationListener<ContextRe
 
     private static Account createTestAccountForPersistence(Client owner) {
         Account account = new Account();
+        account.setNumber(TEST_NUMBER);
         account.setPin(TEST_PIN);
         account.setOwner(owner);
         return account;

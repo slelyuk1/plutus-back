@@ -6,7 +6,7 @@ import java.math.BigDecimal;
 
 @Value
 public class AccountInfo {
-    Long id;
+    String number;
     BigDecimal moneyAmount;
     Long creditTariffId;
     Long userId;

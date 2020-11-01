@@ -4,15 +4,22 @@ import lombok.Data;
 import lombok.ToString;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
+import java.math.BigInteger;
 
 @Data
 @Entity(name = "account")
 public class Account {
+
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    @GeneratedValue
+    private BigInteger id;
+
+    @Column
+    @NotEmpty
+    private String number;
 
     @Column
     @NotNull

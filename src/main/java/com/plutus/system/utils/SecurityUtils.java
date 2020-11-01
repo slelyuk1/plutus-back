@@ -7,7 +7,7 @@ import org.springframework.security.core.context.SecurityContext;
 @NoArgsConstructor(access = AccessLevel.NONE)
 public final class SecurityUtils {
     // TODO: 10/19/2020 make normally
-    public static long getAccountIdFromSecurityContext(SecurityContext context) {
-        return (long) context.getAuthentication().getPrincipal();
+    public static <T> T getAccountIdFromSecurityContext(SecurityContext context) {
+        return (T) context.getAuthentication().getPrincipal();
     }
 }

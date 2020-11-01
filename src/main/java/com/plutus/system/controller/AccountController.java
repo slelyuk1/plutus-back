@@ -5,6 +5,7 @@ import com.plutus.system.model.response.AccountInfo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -15,7 +16,7 @@ public interface AccountController {
     AccountInfo create(@RequestParam Optional<Long> userId, @Valid @RequestBody CreateAccountRequest request);
 
     @PostMapping({"/", "/{accountId}"})
-    AccountInfo getInfo(@PathVariable Optional<Long> accountId);
+    AccountInfo getInfo(@PathVariable Optional<BigInteger> accountId);
 
     @GetMapping("/all")
     Collection<AccountInfo> getAll(@RequestParam Optional<Long> clientId);

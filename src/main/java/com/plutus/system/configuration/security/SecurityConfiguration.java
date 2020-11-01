@@ -35,7 +35,7 @@ import java.util.Map;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public static final String SECURED_API_ENDPOINT = "/api/secured";
-    public static final String TOKEN_ENDPOINT = "/api/auth/token";
+    public static final String TOKEN_ENDPOINT = "/api/auth/**/token";
 
     private final UserDetailsService userDetailsService;
     private final JwtTokenService jwtTokenService;

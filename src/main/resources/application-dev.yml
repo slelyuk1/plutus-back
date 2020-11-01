@@ -25,3 +25,7 @@ app:
   jwt:
     secret: secret
     lifeInMs: 3000000
+  employee:
+    admin:
+      login: admin
+      password: admin

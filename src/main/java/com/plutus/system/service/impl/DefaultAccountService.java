@@ -10,6 +10,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -32,7 +33,7 @@ public class DefaultAccountService implements AccountService {
     }
 
     @Override
-    public Account getAccountById(long id) {
-        return repository.getOne(id);
+    public Optional<Account> find(Account similar) {
+        return repository.findOne(Example.of(similar));
     }
 }

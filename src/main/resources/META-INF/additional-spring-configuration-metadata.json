@@ -9,6 +9,16 @@
       "name": "app.jwt.lifeInMs",
       "type": "java.lang.Long",
       "description": "Description for app.jwt.lifeInMs."
+    },
+    {
+      "name": "app.employee.admin.login",
+      "type": "java.lang.String",
+      "description": "Description for app.employee.admin.login."
+    },
+    {
+      "name": "app.employee.admin.password",
+      "type": "java.lang.String",
+      "description": "Description for app.employee.admin.password."
     }
   ]
 }

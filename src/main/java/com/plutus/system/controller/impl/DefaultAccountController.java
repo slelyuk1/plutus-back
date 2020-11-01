@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -25,11 +26,15 @@ public class DefaultAccountController implements AccountController {
     }
 
     @Override
-    public AccountInfo getInfo(Optional<Long> maybeAccountId) {
-        long accountId = maybeAccountId.orElse(SecurityUtils.getAccountIdFromSecurityContext(SecurityContextHolder.getContext()));
-        Account foundAccount = service.getAccountById(accountId);
+    public AccountInfo getInfo(Optional<BigInteger> maybeAccountId) {
+        BigInteger accountId = maybeAccountId.orElse(SecurityUtils.getAccountIdFromSecurityContext(SecurityContextHolder.getContext()));
+        Account toFind = new Account();
+        toFind.setId(accountId);
+        // TODO: 11/1/2020 Normal exception
+        Account foundAccount = service.find(toFind)
+                .orElseThrow(IllegalStateException::new);
         // TODO: 10/19/2020 credit tariff
-        return new AccountInfo(foundAccount.getId(), foundAccount.getMoney(), null, foundAccount.getOwner().getId());
+        return new AccountInfo(foundAccount.getNumber(), foundAccount.getMoney(), null, foundAccount.getOwner().getId());
     }
 
     @Override
