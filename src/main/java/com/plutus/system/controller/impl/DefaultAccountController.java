@@ -7,8 +7,10 @@ import com.plutus.system.model.response.AccountInfo;
 import com.plutus.system.service.AccountService;
 import com.plutus.system.utils.SecurityUtils;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigInteger;
 import java.util.Collection;
@@ -17,7 +19,6 @@ import java.util.Optional;
 @RestController
 @RequiredArgsConstructor
 public class DefaultAccountController implements AccountController {
-
     private final AccountService service;
 
     @Override
@@ -27,18 +28,21 @@ public class DefaultAccountController implements AccountController {
 
     @Override
     public AccountInfo getInfo(Optional<BigInteger> maybeAccountId) {
-        BigInteger accountId = maybeAccountId.orElse(SecurityUtils.getAccountIdFromSecurityContext(SecurityContextHolder.getContext()));
+        BigInteger accountId = maybeAccountId.orElse(SecurityUtils.getPrincipalFromSecurityContext());
         Account toFind = new Account();
         toFind.setId(accountId);
-        // TODO: 11/1/2020 Normal exception
-        Account foundAccount = service.find(toFind)
-                .orElseThrow(IllegalStateException::new);
-        // TODO: 10/19/2020 credit tariff
-        return new AccountInfo(foundAccount.getNumber(), foundAccount.getMoney(), null, foundAccount.getOwner().getId());
+        return service.find(toFind)
+                .map(DefaultAccountController::accountToAccountInfo)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Account with id %s was not found!", accountId)));
     }
 
+    @PreAuthorize("hasAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
     @Override
     public Collection<AccountInfo> getAll(Optional<Long> clientId) {
-        throw new UnsupportedOperationException("Getting all account is not supported yet");
+        throw new UnsupportedOperationException();
+    }
+
+    public static AccountInfo accountToAccountInfo(Account account) {
+        return new AccountInfo(account.getId(), account.getNumber(), account.getMoney(), null, account.getOwner().getId());
     }
 }

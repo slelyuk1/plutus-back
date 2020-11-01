@@ -10,4 +10,10 @@ public class CreateClientRequest {
     private String name;
     @NotEmpty
     private String surname;
+
+    // TODO: 11/1/2020 Email validator
+    @NotEmpty
+    private String email;
+
+
 }

@@ -1,7 +1,9 @@
 package com.plutus.system.controller;
 
+import com.plutus.system.model.entity.employee.EmployeeRole;
 import com.plutus.system.model.request.CreateAccountRequest;
 import com.plutus.system.model.response.AccountInfo;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -15,7 +17,7 @@ public interface AccountController {
     @PostMapping("/create")
     AccountInfo create(@RequestParam Optional<Long> userId, @Valid @RequestBody CreateAccountRequest request);
 
-    @PostMapping({"/", "/{accountId}"})
+    @GetMapping({"/", "/{accountId}"})
     AccountInfo getInfo(@PathVariable Optional<BigInteger> accountId);
 
     @GetMapping("/all")

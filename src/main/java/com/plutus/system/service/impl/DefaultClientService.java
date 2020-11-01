@@ -6,6 +6,7 @@ import com.plutus.system.service.ClientService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.math.BigInteger;
 import java.util.Collection;
 
 @Service
@@ -20,7 +21,7 @@ public class DefaultClientService implements ClientService {
     }
 
     @Override
-    public Client getClientById(long clientId) {
+    public Client getClientById(BigInteger clientId) {
         return repository.getOne(clientId);
     }
 

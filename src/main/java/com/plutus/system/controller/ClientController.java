@@ -5,6 +5,7 @@ import com.plutus.system.model.response.ClientInfo;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Optional;
 
@@ -15,7 +16,7 @@ public interface ClientController {
     ClientInfo create(@Valid @RequestBody CreateClientRequest request);
 
     @GetMapping({"/", "/{clientId}"})
-    ClientInfo getInfo(@PathVariable Optional<Long> clientId);
+    ClientInfo getInfo(@PathVariable Optional<BigInteger> clientId);
 
     @GetMapping("/all")
     Collection<ClientInfo> getAll();

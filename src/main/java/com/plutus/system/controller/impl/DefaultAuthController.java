@@ -20,7 +20,7 @@ public class DefaultAuthController implements AuthController {
 
     @Override
     public TokenInfo getTokenForATM(ATMTokenRequest tokenRequest, HttpServletRequest httpRequest) {
-        AbstractAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(tokenRequest.getAccountId(), tokenRequest.getPin());
+        AbstractAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(tokenRequest.getAccountNumber(), tokenRequest.getPin());
         String jwtToken = service.generateAuthorizationToken(authToken);
         String csrfToken = service.generateCsrfToken(httpRequest);
         return new TokenInfo(jwtToken, csrfToken);

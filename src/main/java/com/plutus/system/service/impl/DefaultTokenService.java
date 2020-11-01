@@ -15,6 +15,7 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
+import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -31,7 +32,7 @@ public class DefaultTokenService implements JwtTokenService {
         lifeInMs = configuration.getLifeInMs();
     }
 
-    // TODO: 10/18/2020
+    @Override
     public boolean validateToken(String authToken) {
         try {
             Jwts.parser().setSigningKey(jwtSecret).parseClaimsJws(authToken);
@@ -67,7 +68,7 @@ public class DefaultTokenService implements JwtTokenService {
                     .setSigningKey(jwtSecret)
                     .parseClaimsJws(token)
                     .getBody();
-            long id = Long.parseLong(claims.getSubject());
+            BigInteger id = new BigInteger(claims.getSubject());
             @SuppressWarnings("unchecked")
             List<String> securityRolesStr = claims.get(ROLES_CLAIM_NAME, List.class);
             securityRolesStr = securityRolesStr == null ? Collections.emptyList() : securityRolesStr;

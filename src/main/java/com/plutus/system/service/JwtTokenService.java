@@ -10,6 +10,8 @@ import java.util.Optional;
 public interface JwtTokenService {
     Optional<String> getTokenFromRequest(@NotNull HttpServletRequest request);
 
+    boolean validateToken(String authToken);
+
     Optional<Authentication> getAuthenticationFromToken(@NotEmpty String token);
 
     String getTokenFromAuthentication(@NotNull Authentication auth);

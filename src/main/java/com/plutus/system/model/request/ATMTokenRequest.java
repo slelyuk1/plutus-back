@@ -7,7 +7,7 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class ATMTokenRequest {
     @NotEmpty
-    private String accountId;
+    private String accountNumber;
     @NotEmpty
     private String pin;
 }

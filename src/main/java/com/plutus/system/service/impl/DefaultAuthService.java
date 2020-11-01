@@ -25,6 +25,7 @@ public class DefaultAuthService implements AuthService {
 
     @Override
     public String generateCsrfToken(HttpServletRequest request) {
+        // todo check why request is null sometimes
         return csrfTokenRepository.loadToken(request).getToken();
     }
 }
