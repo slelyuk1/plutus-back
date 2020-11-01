@@ -17,6 +17,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -32,9 +35,10 @@ import java.util.Map;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     public static final String SECURED_API_ENDPOINT = "/api/secured";
+    public static final String TOKEN_ENDPOINT = "/api/auth/token";
 
     private final UserDetailsService userDetailsService;
-    private final AuthenticationFilter authenticationFilter;
+    private final JwtTokenService jwtTokenService;
 
     @Override
     public void configure(AuthenticationManagerBuilder authenticationManagerBuilder) throws Exception {
@@ -44,22 +48,30 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         // TODO: 10/18/2020 enable
-        http.csrf().disable().cors().disable()
+        http
+                .csrf().csrfTokenRepository(csrfTokenRepositoryBean()).ignoringAntMatchers(TOKEN_ENDPOINT)
+                .and()
+                .cors().disable()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/api/auth/token")
+                .antMatchers(TOKEN_ENDPOINT)
                 .permitAll()
                 .antMatchers("/h2-console").hasRole(SecurityRole.ADMIN.getRoleString())
                 .anyRequest().authenticated()
                 .and()
-                .addFilterAt(authenticationFilter, UsernamePasswordAuthenticationFilter.class);
+                .addFilterAt(new AuthorizationFilter(jwtTokenService), UsernamePasswordAuthenticationFilter.class);
     }
 
     @Bean
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    @Bean
+    public CsrfTokenRepository csrfTokenRepositoryBean() {
+        return new CookieCsrfTokenRepository();
     }
 
     @Bean

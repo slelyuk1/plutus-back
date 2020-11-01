@@ -14,7 +14,7 @@ public interface AccountController {
     @PostMapping("/create")
     AccountInfo create(@RequestParam Optional<Long> userId, @Valid @RequestBody CreateAccountRequest request);
 
-    @GetMapping({"/", "/{accountId}"})
+    @PostMapping({"/", "/{accountId}"})
     AccountInfo getInfo(@PathVariable Optional<Long> accountId);
 
     @GetMapping("/all")

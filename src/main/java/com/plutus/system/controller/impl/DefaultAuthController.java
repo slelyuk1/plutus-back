@@ -9,6 +9,8 @@ import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.web.bind.annotation.RestController;
 
+import javax.servlet.http.HttpServletRequest;
+
 @RestController
 @RequiredArgsConstructor
 public class DefaultAuthController implements AuthController {
@@ -16,8 +18,10 @@ public class DefaultAuthController implements AuthController {
     private final AuthService service;
 
     @Override
-    public TokenInfo getToken(ATMTokenRequest request) {
-        AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(request.getAccountId(), request.getPin());
-        return new TokenInfo(service.generateToken(authenticationToken));
+    public TokenInfo getToken(ATMTokenRequest tokenRequest, HttpServletRequest httpRequest) {
+        AbstractAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(tokenRequest.getAccountId(), tokenRequest.getPin());
+        String jwtToken = service.generateAuthorizationToken(authenticationToken);
+        String csrfToken = service.generateCsrfToken(httpRequest);
+        return new TokenInfo(jwtToken, csrfToken);
     }
 }

@@ -4,5 +4,6 @@ import lombok.Value;
 
 @Value
 public class TokenInfo {
-    String token;
+    String jwtToken;
+    String csrfToken;
 }
