@@ -1,5 +1,6 @@
 package com.plutus.system.model.request;
 
+import com.plutus.system.validation.annotation.Email;
 import lombok.Data;
 
 import javax.validation.constraints.NotEmpty;
@@ -10,10 +11,6 @@ public class CreateClientRequest {
     private String name;
     @NotEmpty
     private String surname;
-
-    // TODO: 11/1/2020 Email validator
-    @NotEmpty
+    @Email
     private String email;
-
-
 }

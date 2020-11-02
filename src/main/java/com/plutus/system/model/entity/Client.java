@@ -1,11 +1,11 @@
 package com.plutus.system.model.entity;
 
+import com.plutus.system.validation.annotation.Email;
 import lombok.AccessLevel;
 import lombok.Data;
 import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
@@ -31,7 +31,6 @@ public class Client {
 
     @Column
     @Email
-    // TODO: 10/6/2020 custom email validation
     private String email;
 
     @Column
