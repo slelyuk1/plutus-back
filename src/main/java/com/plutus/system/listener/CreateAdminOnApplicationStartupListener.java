@@ -4,7 +4,7 @@ import com.plutus.system.configuration.security.AdminConfiguration;
 import com.plutus.system.model.entity.employee.Employee;
 import com.plutus.system.model.entity.employee.EmployeeRole;
 import com.plutus.system.service.EmployeeService;
-import com.plutus.system.utils.EmployeeUtils;
+import com.plutus.system.utils.RepositorySearchUtils;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationListener;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -20,7 +20,7 @@ public class CreateAdminOnApplicationStartupListener implements ApplicationListe
 
     @Override
     public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
-        if (!service.exists(EmployeeUtils.initEmployeeForSearchByLogin(configuration.getLogin()))) {
+        if (!service.exists(RepositorySearchUtils.employeeForSearchByLogin(configuration.getLogin()))) {
             Employee admin = new Employee();
             admin.setLogin(configuration.getLogin());
             admin.setPassword(configuration.getPassword());

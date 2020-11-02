@@ -9,7 +9,7 @@ import java.util.function.Supplier;
 
 @NoArgsConstructor(access = AccessLevel.NONE)
 public final class SecurityUtils {
-    // TODO: 10/19/2020 make normally
+    @SuppressWarnings("unchecked")
     public static <T> T getPrincipalFromSecurityContext() {
         return (T) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
     }
