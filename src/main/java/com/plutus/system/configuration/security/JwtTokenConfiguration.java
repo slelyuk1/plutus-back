@@ -1,14 +1,18 @@
 package com.plutus.system.configuration.security;
 
-import lombok.Data;
 import lombok.Getter;
-import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 
-@Data
+@Getter
 @Configuration
-@ConfigurationProperties(prefix = "app.jwt")
 public class JwtTokenConfiguration {
-    private String secret;
-    private long lifeInMs;
+    private final String secret;
+    private final long lifeInMs;
+
+    public JwtTokenConfiguration(@Value("${app.jwt.secret}") String secret,
+                                 @Value("${app.jwt.lifeInMs}") long lifeInMs) {
+        this.secret = secret;
+        this.lifeInMs = lifeInMs;
+    }
 }

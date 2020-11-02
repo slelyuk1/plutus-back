@@ -7,3 +7,15 @@ spring:
   jpa:
     hibernate:
       ddl-auto: create
+
+server:
+  error:
+    include-stacktrace: never
+app:
+  jwt:
+    secret: ${JWT_SECRET}
+    lifeInMs: ${JWT_LIFE}
+  employee:
+    admin:
+      login: ${ADMIN_LOGIN}
+      password: ${ADMIN_PASSWORD}
