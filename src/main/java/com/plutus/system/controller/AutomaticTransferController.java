@@ -22,5 +22,5 @@ public interface AutomaticTransferController {
     void delete(@PathVariable long transferId);
 
     @GetMapping("/all")
-    Collection<AutomaticTransferInfo> getAll(@RequestParam Optional<Long> accountId);
+    Collection<AutomaticTransferInfo> getAll(@RequestParam("accountId") Optional<Long> maybeAccountId);
 }

@@ -5,6 +5,7 @@ import com.plutus.system.model.entity.employee.Employee;
 import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
+
 @NoArgsConstructor(access = AccessLevel.NONE)
 public final class RepositorySearchUtils {
     public static Employee employeeForSearchByLogin(String login) {

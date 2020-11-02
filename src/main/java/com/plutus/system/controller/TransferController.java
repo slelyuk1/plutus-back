@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface TransferController {
 
     @GetMapping("/all")
-    Collection<TransferInfo> getAll(@RequestParam Optional<Long> accountId);
+    Collection<TransferInfo> getAll(@RequestParam("accountId") Optional<Long> maybeAccountId);
 
     @PostMapping("/changeBalance")
     void changeBalance(@Valid @RequestBody ChangeBalanceRequest request);

@@ -3,6 +3,7 @@ package com.plutus.system.model.entity;
 import com.plutus.system.validation.annotation.Email;
 import lombok.AccessLevel;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@NoArgsConstructor
 @Entity
 public class Client {
 
@@ -41,4 +43,8 @@ public class Client {
     @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "owner")
     private List<Account> accounts = new ArrayList<>();
+
+    public Client(BigInteger id) {
+        this.id = id;
+    }
 }

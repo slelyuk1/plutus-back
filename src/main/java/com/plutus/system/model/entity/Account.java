@@ -1,6 +1,7 @@
 package com.plutus.system.model.entity;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
@@ -10,6 +11,7 @@ import java.math.BigDecimal;
 import java.math.BigInteger;
 
 @Data
+@NoArgsConstructor
 @Entity(name = "account")
 public class Account {
 
@@ -39,6 +41,10 @@ public class Account {
     public void setOwner(Client owner) {
         this.owner = owner;
         owner.getAccounts().add(this);
+    }
+
+    public Account(BigInteger id) {
+        this.id = id;
     }
 
     // TODO: 10/6/2020 Solve StackOverflow exception when calling toString

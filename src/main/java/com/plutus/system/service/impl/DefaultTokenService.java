@@ -8,7 +8,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
@@ -87,7 +86,7 @@ public class DefaultTokenService implements JwtTokenService {
 
     @Override
     public String getTokenFromAuthentication(@NotNull Authentication authentication) {
-        UserDetails userDetails = (UserDetails) authentication.getPrincipal();
+        BigInteger id = (BigInteger) authentication.getPrincipal();
 
         Date expiryDate = new Date(new Date().getTime() + lifeInMs);
         List<String> roles = authentication.getAuthorities().stream()
@@ -95,7 +94,7 @@ public class DefaultTokenService implements JwtTokenService {
                 .collect(Collectors.toList());
 
         return Jwts.builder()
-                .setSubject(userDetails.getUsername())
+                .setSubject(id.toString())
                 .setIssuedAt(new Date())
                 .setExpiration(expiryDate)
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)

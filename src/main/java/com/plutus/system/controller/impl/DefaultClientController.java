@@ -5,7 +5,7 @@ import com.plutus.system.model.entity.Client;
 import com.plutus.system.model.request.CreateClientRequest;
 import com.plutus.system.model.response.ClientInfo;
 import com.plutus.system.service.ClientService;
-import com.plutus.system.utils.SecurityUtils;
+import com.plutus.system.utils.SecurityHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -23,17 +23,13 @@ public class DefaultClientController implements ClientController {
 
     @Override
     public ClientInfo create(@Valid CreateClientRequest request) {
-        Client toCreate = new Client();
-        toCreate.setName(request.getName());
-        toCreate.setSurname(request.getSurname());
-        toCreate.setEmail(request.getEmail());
-        Client created = service.create(toCreate);
+        Client created = service.create(request);
         return clientToClientInfo(created);
     }
 
     @Override
     public ClientInfo getInfo(Optional<BigInteger> maybeClientId) {
-        BigInteger clientId = maybeClientId.orElse(SecurityUtils.getPrincipalFromSecurityContext());
+        BigInteger clientId = maybeClientId.orElse(SecurityHelper.getPrincipalFromSecurityContext());
         Client client = service.getClientById(clientId);
         return clientToClientInfo(client);
     }
