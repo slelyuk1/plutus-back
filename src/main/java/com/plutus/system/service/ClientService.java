@@ -11,7 +11,7 @@ import java.util.Optional;
 public interface ClientService {
     Client create(CreateClientRequest request);
 
-    Client getClientById(BigInteger clientId);
+    Optional<Client> getClientById(BigInteger clientId);
 
     Optional<Client> findClient(FindClientRequest request);
 

@@ -33,20 +33,19 @@ public class DefaultClientService implements ClientService {
     }
 
     @Override
-    public Client getClientById(BigInteger clientId) {
+    public Optional<Client> getClientById(BigInteger clientId) {
         BigInteger principalId = SecurityHelper.getPrincipalFromSecurityContext();
         if (principalId.equals(clientId)) {
-            // TODO: 11/2/2020 exception may be thrown
-            return repository.getOne(principalId);
+            return repository.findById(principalId);
         }
-        return SecurityHelper.requireRole(SecurityRole.ADMIN, () -> repository.getOne(clientId));
+        return SecurityHelper.requireRole(SecurityRole.ADMIN, () -> repository.findById(clientId));
     }
 
     @Override
     public Optional<Client> findClient(FindClientRequest request) {
         BigInteger principalId = SecurityHelper.getPrincipalFromSecurityContext();
         if (request.getClientId() != null) {
-            return Optional.of(getClientById(request.getClientId()));
+            return getClientById(request.getClientId());
         }
         Client toSearch = new Client();
         toSearch.setEmail(request.getEmail());

@@ -54,7 +54,7 @@ public class DefaultAccountService implements AccountService {
     @Override
     public Optional<Account> find(FindAccountRequest request) {
         if (request.getAccountId() != null) {
-            return Optional.of(findAccountById(request.getAccountId()));
+            return findAccountById(request.getAccountId());
         }
         Account searcher = new Account();
         searcher.setNumber(request.getAccountNumber());
@@ -67,12 +67,11 @@ public class DefaultAccountService implements AccountService {
         return SecurityHelper.requireRole(SecurityRole.ADMIN, () -> repository.findAccountsByOwner(new Client(request.getClientId())));
     }
 
-    private Account findAccountById(BigInteger id) {
+    private Optional<Account> findAccountById(BigInteger id) {
         BigInteger principalId = SecurityHelper.getPrincipalFromSecurityContext();
         if (principalId.equals(id)) {
-            // TODO: 11/2/2020 Exception may be thrown
-            return repository.getOne(id);
+            return repository.findById(id);
         }
-        return SecurityHelper.requireRole(SecurityRole.ADMIN, () -> repository.getOne(id));
+        return SecurityHelper.requireRole(SecurityRole.ADMIN, () -> repository.findById(id));
     }
 }
