@@ -25,7 +25,6 @@ import java.util.Optional;
 public class DefaultAccountService implements AccountService {
 
     private final AccountRepository repository;
-    private final ClientRepository clientRepository;
     private final PasswordEncoder encoder;
 
     @PreAuthorize("hasAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
@@ -64,7 +63,7 @@ public class DefaultAccountService implements AccountService {
 
     @Override
     public Collection<Account> findClientAccounts(FindClientRequest request) {
-        // TODO: 11/2/2020 Finish
+        // TODO: 11/2/2020 Finish with all accounts
         return SecurityHelper.requireRole(SecurityRole.ADMIN, () -> repository.findAccountsByOwner(new Client(request.getClientId())));
     }
 

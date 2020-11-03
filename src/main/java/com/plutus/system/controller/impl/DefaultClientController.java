@@ -1,7 +1,6 @@
 package com.plutus.system.controller.impl;
 
 import com.plutus.system.controller.ClientController;
-import com.plutus.system.model.entity.Client;
 import com.plutus.system.model.request.CreateClientRequest;
 import com.plutus.system.model.response.ClientInfo;
 import com.plutus.system.service.ClientService;
@@ -23,25 +22,19 @@ public class DefaultClientController implements ClientController {
 
     @Override
     public ClientInfo create(@Valid CreateClientRequest request) {
-        Client created = service.create(request);
-        return clientToClientInfo(created);
+        return ClientInfo.fromClient(service.create(request));
     }
 
     @Override
     public ClientInfo getInfo(Optional<BigInteger> maybeClientId) {
         BigInteger clientId = maybeClientId.orElse(SecurityHelper.getPrincipalFromSecurityContext());
-        Client client = service.getClientById(clientId);
-        return clientToClientInfo(client);
+        return ClientInfo.fromClient(service.getClientById(clientId));
     }
 
     @Override
     public Collection<ClientInfo> getAll() {
         return service.getAllClients().stream()
-                .map(DefaultClientController::clientToClientInfo)
+                .map(ClientInfo::fromClient)
                 .collect(Collectors.toList());
-    }
-
-    private static ClientInfo clientToClientInfo(Client client) {
-        return new ClientInfo(client.getId(), client.getName(), client.getSurname(), client.getCreatedWhen());
     }
 }
