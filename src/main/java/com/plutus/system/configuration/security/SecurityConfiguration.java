@@ -1,7 +1,9 @@
 package com.plutus.system.configuration.security;
 
+import com.plutus.system.filter.AuthorizationFilter;
 import com.plutus.system.model.SecurityRole;
 import com.plutus.system.service.JwtTokenService;
+import com.plutus.system.service.impl.DefaultAuthenticationProvider;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

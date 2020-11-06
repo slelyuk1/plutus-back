@@ -33,7 +33,7 @@ public class DefaultUserDetailsService implements UserDetailsService {
                 .orElseGet(() ->
                         employeeRepository.findOne(Example.of(RepositorySearchUtils.employeeForSearchByLogin(id)))
                                 .map(DefaultUserDetailsService::employeeToUserDetails)
-                                .orElseThrow(() -> new UsernameNotFoundException("Couldn't find account with id: " + id))
+                                .orElseThrow(() -> new UsernameNotFoundException("Couldn't find account or employee with username: " + id))
                 );
     }
 

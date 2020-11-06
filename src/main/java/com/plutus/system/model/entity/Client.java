@@ -37,7 +37,6 @@ public class Client {
 
     @Column
     @NotNull
-    // TODO: 10/6/2020 Solve problem with timezones
     private LocalDateTime createdWhen = LocalDateTime.now();
 
     @Setter(AccessLevel.NONE)

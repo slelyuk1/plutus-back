@@ -1,4 +1,4 @@
-package com.plutus.system.configuration.security;
+package com.plutus.system.service.impl;
 
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;

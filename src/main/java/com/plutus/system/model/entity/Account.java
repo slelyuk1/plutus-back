@@ -3,6 +3,7 @@ package com.plutus.system.model.entity;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
+import org.hibernate.validator.constraints.CreditCardNumber;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotEmpty;
@@ -20,7 +21,7 @@ public class Account {
     private BigInteger id;
 
     @Column
-    @NotEmpty
+    @CreditCardNumber
     private String number;
 
     @Column
@@ -29,7 +30,6 @@ public class Account {
 
     @Column
     @NotNull
-    // TODO: 10/6/2020 Check if there exists better alternative to storing money
     private BigDecimal money = BigDecimal.ZERO;
 
     @ToString.Exclude
@@ -47,5 +47,14 @@ public class Account {
         this.id = id;
     }
 
-    // TODO: 10/6/2020 Solve StackOverflow exception when calling toString
+    @Override
+    public String toString() {
+        return "Account{" +
+                "id=" + id +
+                ", number='" + number + '\'' +
+                ", pin='" + pin + '\'' +
+                ", money=" + money +
+                ", ownerId=" + owner.getId() +
+                '}';
+    }
 }

@@ -27,9 +27,9 @@ public class AccountEntityTest {
 
     @Test
     public void testSuccessfulAccountEntryCreation() {
-        Client testClient = ClientUtils.createTestClientForPersistence();
+        Client testClient = ClientUtils.instantiateTestClient();
         entityManager.persist(testClient);
-        Account persisted = entityManager.persist(AccountUtils.createTestAccountForPersistence(testClient));
+        Account persisted = entityManager.persist(AccountUtils.instantiateTestAccount(testClient));
         entityManager.flush();
 
         Account fromDatabase = accountRepository.getOne(persisted.getId());
@@ -39,7 +39,7 @@ public class AccountEntityTest {
     @Test
     public void testAccountCreationWithNullPin() {
         ConstraintViolationException e = Assertions.assertThrows(ConstraintViolationException.class, () -> {
-            Client testClient = ClientUtils.createTestClientForPersistence();
+            Client testClient = ClientUtils.instantiateTestClient();
             entityManager.persist(testClient);
             Account toCreate = new Account();
             toCreate.setOwner(testClient);
@@ -62,8 +62,8 @@ public class AccountEntityTest {
 
     @Test
     public void testRelationshipBetweenAccountAndClient() {
-        Client client = ClientUtils.createTestClientForPersistence();
-        Account account = AccountUtils.createTestAccountForPersistence(client);
+        Client client = ClientUtils.instantiateTestClient();
+        Account account = AccountUtils.instantiateTestAccount(client);
         assertThat(client.getAccounts()).contains(account);
         client = entityManager.persist(client);
         account = entityManager.persist(account);

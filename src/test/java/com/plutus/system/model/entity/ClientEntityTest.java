@@ -24,7 +24,7 @@ public class ClientEntityTest {
 
     @Test
     public void testSuccessfulClientCreation() {
-        Client created = entityManager.persist(ClientUtils.createTestClientForPersistence());
+        Client created = entityManager.persist(ClientUtils.instantiateTestClient());
         entityManager.flush();
 
         Client fromDatabase = repository.getOne(created.getId());
@@ -55,7 +55,7 @@ public class ClientEntityTest {
     @Test
     public void testAccountCreationWithInvalidEmail() {
         ConstraintViolationException e = Assertions.assertThrows(ConstraintViolationException.class, () -> {
-            Client toCreate = ClientUtils.createTestClientForPersistence();
+            Client toCreate = ClientUtils.instantiateTestClient();
             toCreate.setEmail("TEST_INVALID_EMAIL");
             entityManager.persist(toCreate);
             entityManager.flush();

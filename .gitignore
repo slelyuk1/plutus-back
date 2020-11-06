@@ -24,3 +24,4 @@ hs_err_pid*
 /system.iml
 /target/
 /local_database/
+logs

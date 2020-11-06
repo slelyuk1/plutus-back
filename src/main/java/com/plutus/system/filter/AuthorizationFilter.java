@@ -1,4 +1,4 @@
-package com.plutus.system.configuration.security;
+package com.plutus.system.filter;
 
 import com.plutus.system.service.JwtTokenService;
 import lombok.RequiredArgsConstructor;

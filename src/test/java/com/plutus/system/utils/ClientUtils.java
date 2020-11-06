@@ -9,7 +9,7 @@ public final class ClientUtils {
     public static final String CLIENT_TEST_NAME_OR_SURNAME = "Test";
     public static final String CLIENT_TEST_EMAIL = "test@gmail.com";
 
-    public static Client createTestClientForPersistence() {
+    public static Client instantiateTestClient() {
         Client clientForTest = new Client();
         clientForTest.setName(CLIENT_TEST_NAME_OR_SURNAME);
         clientForTest.setSurname(CLIENT_TEST_NAME_OR_SURNAME);

@@ -5,6 +5,7 @@ import com.plutus.system.model.SecurityRole;
 import com.plutus.system.service.JwtTokenService;
 import io.jsonwebtoken.*;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.lang.NonNull;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -13,7 +14,6 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 import java.math.BigInteger;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -21,7 +21,7 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class DefaultTokenService implements JwtTokenService {
-    private static final String ROLES_CLAIM_NAME = "roles";
+    public static final String ROLES_CLAIM_NAME = "roles";
 
     private final String jwtSecret;
     private final long lifeInMs;
@@ -51,7 +51,7 @@ public class DefaultTokenService implements JwtTokenService {
     }
 
     @Override
-    public Optional<String> getTokenFromRequest(@NotNull HttpServletRequest request) {
+    public Optional<String> getTokenFromRequest(@NonNull HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return Optional.of(bearerToken.substring(7));
@@ -67,17 +67,11 @@ public class DefaultTokenService implements JwtTokenService {
                     .setSigningKey(jwtSecret)
                     .parseClaimsJws(token)
                     .getBody();
-            BigInteger id = new BigInteger(claims.getSubject());
+            Number id = new BigInteger(claims.getSubject());
             @SuppressWarnings("unchecked")
             List<String> securityRolesStr = claims.get(ROLES_CLAIM_NAME, List.class);
             securityRolesStr = securityRolesStr == null ? Collections.emptyList() : securityRolesStr;
-            Collection<GrantedAuthority> grantedAuthorities = securityRolesStr.stream()
-                    .map(SecurityRole::fromString)
-                    .filter(Optional::isPresent)
-                    .map(Optional::get)
-                    .map(SecurityRole::getGrantedAuthority)
-                    .collect(Collectors.toList());
-            authentication = new UsernamePasswordAuthenticationToken(id, token, grantedAuthorities);
+            authentication = new UsernamePasswordAuthenticationToken(id, null, grantedAuthoritiesFromStrings(securityRolesStr));
         } catch (JwtException e) {
             log.warn("Exception when parsing token occurred: ", e);
         }
@@ -85,20 +79,34 @@ public class DefaultTokenService implements JwtTokenService {
     }
 
     @Override
-    public String getTokenFromAuthentication(@NotNull Authentication authentication) {
-        BigInteger id = (BigInteger) authentication.getPrincipal();
+    public String getTokenFromAuthentication(@NonNull Authentication authentication) {
+        if (!(authentication.getPrincipal() instanceof Number)) {
+            throw new IllegalArgumentException("Authentication must contain Number as principal!");
+        }
+        Number id = (Number) authentication.getPrincipal();
 
-        Date expiryDate = new Date(new Date().getTime() + lifeInMs);
-        List<String> roles = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-
+        Date currentDate = new Date();
         return Jwts.builder()
                 .setSubject(id.toString())
-                .setIssuedAt(new Date())
-                .setExpiration(expiryDate)
+                .setIssuedAt(currentDate)
+                .setExpiration(new Date(currentDate.getTime() + lifeInMs))
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
-                .claim(ROLES_CLAIM_NAME, roles)
+                .claim(ROLES_CLAIM_NAME, grantedAuthoritiesToStrings(authentication.getAuthorities()))
                 .compact();
+    }
+
+    public static Collection<String> grantedAuthoritiesToStrings(Collection<? extends GrantedAuthority> grantedAuthorities) {
+        return grantedAuthorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+    }
+
+    public static Collection<? extends GrantedAuthority> grantedAuthoritiesFromStrings(Collection<String> securityRolesStr) {
+        return securityRolesStr.stream()
+                .map(SecurityRole::fromString)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(SecurityRole::getGrantedAuthority)
+                .collect(Collectors.toList());
     }
 }
