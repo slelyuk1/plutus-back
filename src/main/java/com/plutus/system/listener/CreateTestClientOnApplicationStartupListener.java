@@ -25,7 +25,7 @@ public class CreateTestClientOnApplicationStartupListener implements Application
 
     public static final String CLIENT_TEST_NAME_OR_SURNAME = "Test";
     public static final String CLIENT_TEST_EMAIL = "test@gmail.com";
-    public static final String TEST_NUMBER = "1234123412341234";
+    public static final String TEST_NUMBER = "4532280486346619";
     public static final String TEST_PIN = "1234";
 
     private final ClientService clientService;
