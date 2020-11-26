@@ -38,12 +38,16 @@ public class DefaultAccountController implements AccountController {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, String.format("Account with id %s was not found!", accountIdToFind)));
     }
 
+    // todo think through and refactor security code
     @Override
     public Collection<AccountInfo> getAll(Optional<BigInteger> maybeClientId) {
-        BigInteger clientId = maybeClientId.orElseGet(SecurityHelper::getPrincipalFromSecurityContext);
-        FindClientRequest request = new FindClientRequest();
-        request.setClientId(clientId);
-        return service.findClientAccounts(request).stream()
+        Optional<FindClientRequest> maybeFindRequest = maybeClientId
+                .map(clientId -> {
+                    FindClientRequest request = new FindClientRequest();
+                    request.setClientId(clientId);
+                    return request;
+                });
+        return service.findClientAccounts(maybeFindRequest).stream()
                 .map(AccountInfo::fromAccount)
                 .collect(Collectors.toList());
     }

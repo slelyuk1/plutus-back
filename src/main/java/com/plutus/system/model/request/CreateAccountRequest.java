@@ -12,12 +12,9 @@ import java.math.BigInteger;
 public class CreateAccountRequest {
     @CreditCardNumber
     private String number;
-
     @PinCode
     private String pin;
-    
-    // TODO: 11/3/2020 Make @NotNull when credit tariffs are implemented
-    @Nullable
+    @NotNull
     private BigInteger creditTariffId;
     @NotNull
     private BigInteger ownerId;

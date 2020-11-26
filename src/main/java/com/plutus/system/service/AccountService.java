@@ -16,5 +16,5 @@ public interface AccountService {
 
     Optional<Account> find(FindAccountRequest request);
 
-    Collection<Account> findClientAccounts(FindClientRequest request);
+    Collection<Account> findClientAccounts(Optional<FindClientRequest> request);
 }

@@ -11,10 +11,10 @@ public class AccountInfo {
     BigInteger id;
     String number;
     BigDecimal moneyAmount;
-    Long creditTariffId;
+    BigInteger creditTariffId;
     BigInteger clientId;
 
     public static AccountInfo fromAccount(Account account) {
-        return new AccountInfo(account.getId(), account.getNumber(), account.getMoney(), null, account.getOwner().getId());
+        return new AccountInfo(account.getId(), account.getNumber(), account.getMoney(), account.getCreditTariff().getId(), account.getOwner().getId());
     }
 }

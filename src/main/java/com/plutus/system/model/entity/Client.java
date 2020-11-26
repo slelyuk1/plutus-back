@@ -16,7 +16,7 @@ import java.util.List;
 
 @Data
 @NoArgsConstructor
-@Entity
+@Entity(name = "client")
 public class Client {
 
     @Id

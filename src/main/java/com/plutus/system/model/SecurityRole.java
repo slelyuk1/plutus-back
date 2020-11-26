@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Getter
 public enum SecurityRole {
-    ADMIN("ADMIN"), ATM("ATM");
+    ADMIN("ADMIN"), ATM("ATM"), CLIENT("CLIENT");
 
     private final GrantedAuthority grantedAuthority;
 

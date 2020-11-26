@@ -2,11 +2,9 @@ package com.plutus.system.model.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -32,7 +30,11 @@ public class Account {
     @NotNull
     private BigDecimal money = BigDecimal.ZERO;
 
-    @ToString.Exclude
+    @NotNull
+    @ManyToOne(optional = false)
+//    @JoinColumn(name = "credit_tariff_id")
+    private CreditTariff creditTariff;
+
     @NotNull
     @ManyToOne(optional = false)
     @JoinColumn(name = "client_id")
