@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Optional;
 
 @Service
 @Transactional
@@ -74,5 +75,11 @@ public class DefaultCreditTariffService implements CreditTariffService {
     @Override
     public Collection<CreditTariff> getAll() {
         return creditTariffRepository.findAll();
+    }
+
+    @Override
+    public Optional<CreditTariff> getById(BigInteger id) {
+        // todo make security refactoring
+        return creditTariffRepository.findById(id);
     }
 }

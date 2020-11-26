@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/secured/creditTariff")
@@ -23,4 +24,7 @@ public interface CreditTariffController {
 
     @GetMapping("/all")
     Collection<CreditTariffInfo> getAll();
+
+    @GetMapping({"/", "/{creditTariffId}"})
+    CreditTariffInfo get(@PathVariable("creditTariffId") Optional<BigInteger> maybeCreditTariffId);
 }

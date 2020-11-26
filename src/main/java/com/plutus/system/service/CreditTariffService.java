@@ -7,6 +7,7 @@ import com.plutus.system.model.request.ModifyOrCreateCreditTariffRequest;
 
 import java.math.BigInteger;
 import java.util.Collection;
+import java.util.Optional;
 
 public interface CreditTariffService {
     CreditTariff createOrModify(ModifyOrCreateCreditTariffRequest request) throws NotExistsException;
@@ -16,4 +17,6 @@ public interface CreditTariffService {
     void assignToAccount(AssignCreditTariffToAccountRequest request) throws NotExistsException;
 
     Collection<CreditTariff> getAll();
+
+    Optional<CreditTariff> getById(BigInteger id);
 }
