@@ -1,14 +1,17 @@
 package com.plutus.system.service.impl;
 
+import com.plutus.system.exception.NotExistsException;
 import com.plutus.system.model.SecurityRole;
 import com.plutus.system.model.entity.Account;
 import com.plutus.system.model.entity.Client;
 import com.plutus.system.model.entity.CreditTariff;
 import com.plutus.system.model.request.account.CreateAccountRequest;
-import com.plutus.system.model.request.account.FindAccountRequest;
+import com.plutus.system.model.request.account.FindAccountsRequest;
+import com.plutus.system.model.request.account.FindOneAccountRequest;
 import com.plutus.system.model.request.client.FindClientRequest;
 import com.plutus.system.repository.AccountRepository;
 import com.plutus.system.service.AccountService;
+import com.plutus.system.service.ClientService;
 import com.plutus.system.utils.SecurityHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
@@ -16,6 +19,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityManager;
 import javax.transaction.Transactional;
 import java.math.BigInteger;
 import java.util.Collection;
@@ -26,7 +30,9 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class DefaultAccountService implements AccountService {
 
-    private final AccountRepository repository;
+    private final EntityManager entityManager;
+    private final AccountRepository accountRepository;
+    private final ClientService clientService;
     private final PasswordEncoder encoder;
 
     @PreAuthorize("hasAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
@@ -42,51 +48,40 @@ public class DefaultAccountService implements AccountService {
         CreditTariff creditTariff = new CreditTariff(request.getCreditTariffId());
         toCreate.setCreditTariff(creditTariff);
 
-        return repository.save(toCreate);
+        return accountRepository.save(toCreate);
     }
 
     @Override
-    public Collection<Account> getClientAccounts(Client client) {
-        BigInteger currentClientId = SecurityHelper.getPrincipalFromSecurityContext();
-        Account accountToFind = new Account();
-        accountToFind.setOwner(client);
-        if (currentClientId.equals(client.getId())) {
-            return repository.findAll(Example.of(accountToFind));
-        }
-        return SecurityHelper.requireRole(SecurityRole.ADMIN, () -> repository.findAll(Example.of(accountToFind)));
-    }
-
-    @Override
-    public Optional<Account> find(FindAccountRequest request) {
+    public Optional<Account> findAccount(FindOneAccountRequest request) {
         if (request.getAccountId() != null) {
             return findAccountById(request.getAccountId());
         }
         Account searcher = new Account();
         searcher.setNumber(request.getAccountNumber());
-        return SecurityHelper.requireRole(SecurityRole.ADMIN, () -> repository.findOne(Example.of(searcher)));
+        return accountRepository.findOne(Example.of(searcher));
     }
 
-    @PreAuthorize("hasAnyAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority(), " +
-            "T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
     @Override
-    public Collection<Account> findClientAccounts(Optional<FindClientRequest> maybeRequest) {
-        if (maybeRequest.isPresent()) {
-            FindClientRequest request = maybeRequest.get();
-            Client forSearch = new Client(request.getClientId());
-            forSearch.setEmail(request.getEmail());
-            if (SecurityHelper.getPrincipalFromSecurityContext().equals(forSearch.getId())) {
-                return repository.findAccountsByOwner(forSearch);
-            }
-            return SecurityHelper.requireRole(SecurityRole.ADMIN, () -> repository.findAccountsByOwner(forSearch));
-        }
-        return SecurityHelper.requireRole(SecurityRole.ADMIN, repository::findAll);
+    public Collection<Account> findAccounts(FindAccountsRequest request) {
+        Account searcher = new Account();
+        FindClientRequest findClientRequest = new FindClientRequest();
+        findClientRequest.setClientId(request.getClientId());
+        Client owner = clientService.findClient(findClientRequest)
+                .orElseThrow(() -> new NotExistsException("Client", request.getClientId()));
+        searcher.setOwner(owner);
+        return accountRepository.findAll(Example.of(searcher));
+    }
+
+    @Override
+    public Collection<Account> findAllAccounts() {
+        return accountRepository.findAll();
     }
 
     private Optional<Account> findAccountById(BigInteger id) {
         BigInteger principalId = SecurityHelper.getPrincipalFromSecurityContext();
         if (principalId.equals(id)) {
-            return repository.findById(id);
+            return accountRepository.findById(id);
         }
-        return SecurityHelper.requireRole(SecurityRole.ADMIN, () -> repository.findById(id));
+        return SecurityHelper.requireRole(SecurityRole.ADMIN, () -> accountRepository.findById(id));
     }
 }

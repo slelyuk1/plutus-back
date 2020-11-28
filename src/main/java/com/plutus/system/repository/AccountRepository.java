@@ -10,5 +10,4 @@ import java.util.Collection;
 
 @Repository
 public interface AccountRepository extends JpaRepository<Account, BigInteger> {
-    Collection<Account> findAccountsByOwner(Client owner);
 }
