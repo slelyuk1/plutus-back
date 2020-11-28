@@ -1,4 +1,4 @@
-package com.plutus.system.model.request;
+package com.plutus.system.model.request.client;
 
 import com.plutus.system.validation.annotation.Email;
 import lombok.Data;

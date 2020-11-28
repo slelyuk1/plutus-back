@@ -1,7 +1,7 @@
 package com.plutus.system.controller;
 
-import com.plutus.system.model.request.ATMTokenRequest;
-import com.plutus.system.model.request.AdminTokenRequest;
+import com.plutus.system.model.request.auth.ATMTokenRequest;
+import com.plutus.system.model.request.auth.AdminTokenRequest;
 import com.plutus.system.model.response.TokenInfo;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;

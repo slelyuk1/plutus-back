@@ -1,15 +1,18 @@
 package com.plutus.system.service;
 
-import com.plutus.system.model.request.ChangeBalanceRequest;
-import com.plutus.system.model.request.MakeTransferRequest;
-import com.plutus.system.model.response.TransferInfo;
+import com.plutus.system.exception.NotExistsException;
+import com.plutus.system.model.entity.Transfer;
+import com.plutus.system.model.request.transfer.ChangeBalanceRequest;
+import com.plutus.system.model.request.transfer.FindTransferRequest;
+import com.plutus.system.model.request.transfer.MakeTransferRequest;
 
-import java.math.BigDecimal;
 import java.util.Collection;
+import java.util.Optional;
 
 public interface TransferService {
-    Collection<TransferInfo> getAll(Long accountId);
-    void changeBalance(ChangeBalanceRequest request);
-    TransferInfo makeTransfer(MakeTransferRequest request);
+    Collection<Transfer> find(Optional<FindTransferRequest> maybeRequest);
 
+    Transfer changeBalance(ChangeBalanceRequest request);
+
+    Transfer makeTransfer(MakeTransferRequest request);
 }

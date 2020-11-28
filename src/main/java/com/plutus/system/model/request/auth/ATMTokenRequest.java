@@ -1,4 +1,4 @@
-package com.plutus.system.model.request;
+package com.plutus.system.model.request.auth;
 
 import lombok.Data;
 

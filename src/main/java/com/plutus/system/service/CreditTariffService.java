@@ -2,8 +2,8 @@ package com.plutus.system.service;
 
 import com.plutus.system.exception.NotExistsException;
 import com.plutus.system.model.entity.CreditTariff;
-import com.plutus.system.model.request.AssignCreditTariffToAccountRequest;
-import com.plutus.system.model.request.ModifyOrCreateCreditTariffRequest;
+import com.plutus.system.model.request.creditTariff.AssignCreditTariffToAccountRequest;
+import com.plutus.system.model.request.creditTariff.ModifyOrCreateCreditTariffRequest;
 
 import java.math.BigInteger;
 import java.util.Collection;

@@ -2,7 +2,7 @@ package com.plutus.system.controller.impl;
 
 import com.plutus.system.controller.ClientController;
 import com.plutus.system.model.entity.Client;
-import com.plutus.system.model.request.CreateClientRequest;
+import com.plutus.system.model.request.client.CreateClientRequest;
 import com.plutus.system.model.response.ClientInfo;
 import com.plutus.system.service.ClientService;
 import com.plutus.system.utils.SecurityHelper;

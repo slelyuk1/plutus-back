@@ -37,7 +37,7 @@ public class Client {
 
     @Column
     @NotNull
-    private LocalDateTime createdWhen = LocalDateTime.now();
+    private LocalDateTime createdWhen;
 
     @Setter(AccessLevel.NONE)
     @OneToMany(mappedBy = "owner")
@@ -45,5 +45,12 @@ public class Client {
 
     public Client(BigInteger id) {
         this.id = id;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (createdWhen == null) {
+            createdWhen = LocalDateTime.now();
+        }
     }
 }

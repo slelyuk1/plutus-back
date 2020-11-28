@@ -3,46 +3,52 @@ package com.plutus.system.model.entity;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.math.BigDecimal;
-import java.time.LocalDate;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 
 @Data
-@Entity(name = "transfers")
+@Entity(name = "transfer")
 @NoArgsConstructor
 public class Transfer {
     @Id
-    @GeneratedValue
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private BigInteger id;
 
-    @Column
-    private Long fromId;
+    @OneToOne
+    private Account creator;
 
-    @Column
-    private Long toId;
+    @OneToOne
+    private Account receiver;
 
-    @Column
     @NotNull
-    private String transferStatus;
-
     @Column
-    @NotNull
     BigDecimal amount;
 
-    @Column
     @NotNull
+    @Column
     LocalDateTime createdWhen;
 
     @Column
-    @NotNull
     String description;
 
+    @PrePersist
+    public void prePersist() {
+        if (creator == null && receiver == null) {
+            //todo throw exception https://stackoverflow.com/questions/37878992/custom-jpa-validation-in-spring-boot
+        }
+        if (createdWhen == null) {
+            createdWhen = LocalDateTime.now();
+        }
+    }
 
+    @PreUpdate
+    public void preUpdate() {
+        if (creator == null && receiver == null) {
+            //todo throw exception
+        }
+    }
 }

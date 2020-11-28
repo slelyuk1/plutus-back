@@ -1,5 +1,6 @@
 package com.plutus.system.controller;
 
+import com.plutus.system.configuration.security.SecurityConfiguration;
 import com.plutus.system.model.request.CreateAutomaticTransferRequest;
 import com.plutus.system.model.response.AutomaticTransferInfo;
 import org.springframework.web.bind.annotation.*;
@@ -9,7 +10,7 @@ import java.util.Collection;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/secured/automaticTransfer")
+@RequestMapping(SecurityConfiguration.SECURED_API_ENDPOINT + "/automaticTransfer")
 public interface AutomaticTransferController {
 
     @PostMapping("/create")

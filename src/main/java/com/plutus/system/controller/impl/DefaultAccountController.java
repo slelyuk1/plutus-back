@@ -1,9 +1,9 @@
 package com.plutus.system.controller.impl;
 
 import com.plutus.system.controller.AccountController;
-import com.plutus.system.model.request.CreateAccountRequest;
-import com.plutus.system.model.request.FindAccountRequest;
-import com.plutus.system.model.request.FindClientRequest;
+import com.plutus.system.model.request.account.CreateAccountRequest;
+import com.plutus.system.model.request.account.FindAccountRequest;
+import com.plutus.system.model.request.client.FindClientRequest;
 import com.plutus.system.model.response.AccountInfo;
 import com.plutus.system.service.AccountService;
 import com.plutus.system.utils.SecurityHelper;

@@ -28,11 +28,10 @@ public class Account {
 
     @Column
     @NotNull
-    private BigDecimal money = BigDecimal.ZERO;
+    private BigDecimal money;
 
     @NotNull
     @ManyToOne(optional = false)
-//    @JoinColumn(name = "credit_tariff_id")
     private CreditTariff creditTariff;
 
     @NotNull
@@ -47,6 +46,13 @@ public class Account {
 
     public Account(BigInteger id) {
         this.id = id;
+    }
+
+    @PrePersist
+    public void prePersist() {
+        if (money == null) {
+            money = BigDecimal.ZERO;
+        }
     }
 
     @Override

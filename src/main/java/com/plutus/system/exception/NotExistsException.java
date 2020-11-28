@@ -1,15 +1,17 @@
 package com.plutus.system.exception;
 
-import java.math.BigInteger;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
-public class NotExistsException extends Exception {
-    private static final String MESSAGE = "%s with id %d doesn't exist!";
+@ResponseStatus(HttpStatus.NOT_FOUND)
+public class NotExistsException extends RuntimeException {
+    private static final String MESSAGE = "%s with parameter %s doesn't exist!";
 
-    public NotExistsException(String entityName, BigInteger id) {
-        this(entityName, id, null);
+    public NotExistsException(String entityName, Object parameter) {
+        this(entityName, parameter, null);
     }
 
-    public NotExistsException(String entityName, BigInteger id, Throwable cause) {
-        super(String.format(MESSAGE, entityName, id), cause);
+    public NotExistsException(String entityName, Object parameter, Throwable cause) {
+        super(String.format(MESSAGE, entityName, parameter), cause);
     }
 }
