@@ -16,8 +16,8 @@ public interface ClientController {
     @PostMapping("/create")
     ClientInfo create(@Valid @RequestBody CreateClientRequest request);
 
-    @GetMapping({"/", "/{clientId}"})
-    ClientInfo getInfo(@PathVariable("clientId") Optional<BigInteger> maybeClientId);
+    @GetMapping("/{clientId}")
+    ClientInfo getInfo(@PathVariable("clientId") BigInteger maybeClientId);
 
     @GetMapping("/all")
     Collection<ClientInfo> getAll();
