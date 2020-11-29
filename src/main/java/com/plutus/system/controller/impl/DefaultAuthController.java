@@ -21,14 +21,14 @@ public class DefaultAuthController implements AuthController {
     private final JwtTokenService jwtTokenService;
 
     @Override
-    public TokenInfo getTokenForATM(ATMTokenRequest tokenRequest, HttpServletRequest httpRequest) {
+    public TokenInfo getTokenForATM(ATMTokenRequest tokenRequest) {
         Authentication authToken = new UsernamePasswordAuthenticationToken(tokenRequest.getAccountNumber(), tokenRequest.getPin());
         Authentication authorized = service.generateAuthorizationToken(authToken);
         return new TokenInfo(jwtTokenService.getTokenFromAuthentication(authorized));
     }
 
     @Override
-    public TokenInfo getTokenForAdmin(AdminTokenRequest tokenRequest, HttpServletRequest httpRequest) {
+    public TokenInfo getTokenForAdmin(AdminTokenRequest tokenRequest) {
         Authentication authToken = new UsernamePasswordAuthenticationToken(tokenRequest.getLogin(), tokenRequest.getPassword());
         Authentication authorized = service.generateAuthorizationToken(authToken);
         return new TokenInfo(jwtTokenService.getTokenFromAuthentication(authorized));

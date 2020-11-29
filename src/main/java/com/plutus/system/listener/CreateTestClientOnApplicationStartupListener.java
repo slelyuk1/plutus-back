@@ -1,11 +1,10 @@
 package com.plutus.system.listener;
 
-import com.plutus.system.exception.NotExistsException;
 import com.plutus.system.model.entity.Account;
 import com.plutus.system.model.entity.Client;
 import com.plutus.system.model.entity.CreditTariff;
 import com.plutus.system.model.request.account.CreateAccountRequest;
-import com.plutus.system.model.request.account.FindAccountRequest;
+import com.plutus.system.model.request.account.FindOneAccountRequest;
 import com.plutus.system.model.request.client.CreateClientRequest;
 import com.plutus.system.model.request.client.FindClientRequest;
 import com.plutus.system.model.request.creditTariff.ModifyOrCreateCreditTariffRequest;
@@ -49,22 +48,18 @@ public class CreateTestClientOnApplicationStartupListener implements Application
             FindClientRequest findClientRequest = new FindClientRequest();
             findClientRequest.setEmail(CLIENT_TEST_EMAIL);
             CreditTariff createdCreditTariff;
-            try {
-                createdCreditTariff = creditTariffService.createOrModify(createTestCreditTariffRequest());
-                Client createdClient = clientService.findClient(findClientRequest)
-                        .orElseGet(() -> clientService.create(createTestClientRequest()));
-                log.info("Created test client: {}", createdClient);
+            createdCreditTariff = creditTariffService.createOrModify(createTestCreditTariffRequest());
+            Client createdClient = clientService.findClient(findClientRequest)
+                    .orElseGet(() -> clientService.create(createTestClientRequest()));
+            log.info("Created test client: {}", createdClient);
 
-                FindAccountRequest findAccountRequest = new FindAccountRequest();
-                findAccountRequest.setAccountNumber(TEST_NUMBER);
-                Account createdAccount = accountService.find(findAccountRequest)
-                        .orElseGet(() -> accountService.create(createAccountRequest(createdClient, createdCreditTariff)));
-                log.info("Created test account: {}", createdAccount);
-                return null;
-            } catch (NotExistsException e) {
-                // todo
-                throw new IllegalStateException("NotExistsException cannot be thrown here!", e);
-            }
+            FindOneAccountRequest findOneAccountRequest = new FindOneAccountRequest();
+            findOneAccountRequest.setAccountNumber(TEST_NUMBER);
+            Account createdAccount = accountService.findAccount(findOneAccountRequest)
+                    .orElseGet(() -> accountService.create(createAccountRequest(createdClient, createdCreditTariff)));
+            log.info("Created test account: {}", createdAccount);
+            return null;
+
         });
     }
 

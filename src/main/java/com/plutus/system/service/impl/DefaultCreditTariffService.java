@@ -9,7 +9,6 @@ import com.plutus.system.repository.AccountRepository;
 import com.plutus.system.repository.CreditTariffRepository;
 import com.plutus.system.service.CreditTariffService;
 import lombok.AllArgsConstructor;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -25,12 +24,12 @@ public class DefaultCreditTariffService implements CreditTariffService {
     private final CreditTariffRepository creditTariffRepository;
     private final AccountRepository accountRepository;
 
-    @PreAuthorize("hasAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
     @Override
     public CreditTariff createOrModify(ModifyOrCreateCreditTariffRequest request) throws NotExistsException {
         if (request.getId() != null) {
-            CreditTariff existing = creditTariffRepository.findById(request.getId())
+            CreditTariff existing = getById(request.getId())
                     .orElseThrow(() -> new NotExistsException("Credit tariff", request.getId()));
+            // todo merge can be used
             if (request.getLimit() != null) {
                 existing.setLimit(request.getLimit());
             }
@@ -50,7 +49,6 @@ public class DefaultCreditTariffService implements CreditTariffService {
         return creditTariffRepository.save(toCreate);
     }
 
-    @PreAuthorize("hasAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
     @Override
     public boolean delete(BigInteger creditTariffId) {
         if (creditTariffRepository.existsById(creditTariffId)) {
@@ -60,7 +58,6 @@ public class DefaultCreditTariffService implements CreditTariffService {
         return false;
     }
 
-    @PreAuthorize("hasAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
     @Override
     public void assignToAccount(AssignCreditTariffToAccountRequest request) throws NotExistsException {
         Account account = accountRepository.findById(request.getAccountId())
@@ -71,7 +68,6 @@ public class DefaultCreditTariffService implements CreditTariffService {
         accountRepository.save(account);
     }
 
-    @PreAuthorize("hasAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
     @Override
     public Collection<CreditTariff> getAll() {
         return creditTariffRepository.findAll();
@@ -79,7 +75,6 @@ public class DefaultCreditTariffService implements CreditTariffService {
 
     @Override
     public Optional<CreditTariff> getById(BigInteger id) {
-        // todo make security refactoring
         return creditTariffRepository.findById(id);
     }
 }
