@@ -9,10 +9,11 @@ import java.math.BigInteger;
 @Value
 public class CreditTariffInfo {
     BigInteger id;
+    String name;
     Integer percent;
     BigDecimal limit;
 
     public static CreditTariffInfo fromCreditTariff(CreditTariff creditTariff) {
-        return new CreditTariffInfo(creditTariff.getId(), creditTariff.getPercent(), creditTariff.getLimit());
+        return new CreditTariffInfo(creditTariff.getId(), creditTariff.getName(), creditTariff.getPercent(), creditTariff.getLimit());
     }
 }

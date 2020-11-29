@@ -23,12 +23,13 @@ public class DefaultClientController implements ClientController {
     private final ClientService service;
 
     @Override
+    @PreAuthorize("hasAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
     public ClientInfo create(@Valid CreateClientRequest request) {
         return ClientInfo.fromClient(service.create(request));
     }
 
-    @PreAuthorize("hasAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
     @Override
+    @PreAuthorize("hasAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
     public ClientInfo getInfo(BigInteger clientId) {
         FindClientRequest request = new FindClientRequest();
         request.setClientId(clientId);
@@ -37,8 +38,8 @@ public class DefaultClientController implements ClientController {
         return ClientInfo.fromClient(found);
     }
 
-    @PreAuthorize("hasAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
     @Override
+    @PreAuthorize("hasAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
     public Collection<ClientInfo> getAll() {
         return service.getAllClients().stream()
                 .map(ClientInfo::fromClient)

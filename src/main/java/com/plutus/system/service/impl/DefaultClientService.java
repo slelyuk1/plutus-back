@@ -21,7 +21,6 @@ public class DefaultClientService implements ClientService {
 
     private final ClientRepository repository;
 
-    @PreAuthorize("hasAuthority(T(com.plutus.system.model.SecurityRole).ADMIN.getGrantedAuthority())")
     @Override
     public Client create(CreateClientRequest request) {
         Client toCreate = new Client();
@@ -38,7 +37,7 @@ public class DefaultClientService implements ClientService {
         }
         Client toSearch = new Client();
         toSearch.setEmail(request.getEmail());
-        return SecurityHelper.requireRole(SecurityRole.ADMIN, () -> repository.findOne(Example.of(toSearch)));
+        return repository.findOne(Example.of(toSearch));
     }
 
     @Override
