@@ -2,7 +2,6 @@ package com.plutus.system.model;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 
 @Getter
 @RequiredArgsConstructor

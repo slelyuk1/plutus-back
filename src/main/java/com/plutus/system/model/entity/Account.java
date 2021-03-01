@@ -39,13 +39,13 @@ public class Account {
     @JoinColumn(name = "client_id")
     private Client owner;
 
+    public Account(BigInteger id) {
+        this.id = id;
+    }
+
     public void setOwner(Client owner) {
         this.owner = owner;
         owner.getAccounts().add(this);
-    }
-
-    public Account(BigInteger id) {
-        this.id = id;
     }
 
     @PrePersist

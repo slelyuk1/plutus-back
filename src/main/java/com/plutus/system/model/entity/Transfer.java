@@ -14,26 +14,21 @@ import java.time.LocalDateTime;
 @Entity(name = "transfer")
 @NoArgsConstructor
 public class Transfer {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private BigInteger id;
-
-    @OneToOne
-    private Account creator;
-
-    @OneToOne
-    private Account receiver;
-
     @NotNull
     @Column
     BigDecimal amount;
-
     @NotNull
     @Column
     LocalDateTime createdWhen;
-
     @Column
     String description;
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private BigInteger id;
+    @OneToOne
+    private Account creator;
+    @OneToOne
+    private Account receiver;
 
     @PrePersist
     public void prePersist() {

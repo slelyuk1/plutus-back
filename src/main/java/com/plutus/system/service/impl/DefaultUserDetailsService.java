@@ -26,6 +26,15 @@ public class DefaultUserDetailsService implements UserDetailsService {
     private final AccountRepository accountRepository;
     private final EmployeeRepository employeeRepository;
 
+    private static UserDetails accountToUserDetails(Account account) {
+        return new User(account.getId().toString(), account.getPin(), Collections.singleton(SecurityRole.ATM.getGrantedAuthority()));
+    }
+
+    private static UserDetails employeeToUserDetails(Employee employee) {
+        Collection<GrantedAuthority> grantedAuthorities = Collections.singleton(employee.getRole().getSecurityRole().getGrantedAuthority());
+        return new User(employee.getId().toString(), employee.getPassword(), grantedAuthorities);
+    }
+
     @Override
     public UserDetails loadUserByUsername(String id) throws UsernameNotFoundException {
         return accountRepository.findOne(Example.of(RepositorySearchUtils.accountForSearchByNumber(id)))
@@ -35,14 +44,5 @@ public class DefaultUserDetailsService implements UserDetailsService {
                                 .map(DefaultUserDetailsService::employeeToUserDetails)
                                 .orElseThrow(() -> new UsernameNotFoundException("Couldn't find account or employee with username: " + id))
                 );
-    }
-
-    private static UserDetails accountToUserDetails(Account account) {
-        return new User(account.getId().toString(), account.getPin(), Collections.singleton(SecurityRole.ATM.getGrantedAuthority()));
-    }
-
-    private static UserDetails employeeToUserDetails(Employee employee) {
-        Collection<GrantedAuthority> grantedAuthorities = Collections.singleton(employee.getRole().getSecurityRole().getGrantedAuthority());
-        return new User(employee.getId().toString(), employee.getPassword(), grantedAuthorities);
     }
 }

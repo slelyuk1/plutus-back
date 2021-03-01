@@ -19,6 +19,19 @@ public class SecurityHelper {
     private final UserDetailsService detailsService;
     private final AuthenticationManager authenticationManager;
 
+    @SuppressWarnings("unchecked")
+    public static <T> T getPrincipalFromSecurityContext() {
+        return (T) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+    }
+
+    public static <T> T requireRole(SecurityRole role, Supplier<T> supplier) {
+        SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
+                .filter(authority -> authority.equals(role.getGrantedAuthority()))
+                .findAny()
+                .orElseThrow(() -> new SecurityException("SecurityContext doesn't have specified role " + role.getRoleString()));
+        return supplier.get();
+    }
+
     public <T> T doAsAdmin(Supplier<T> supplier) {
         Authentication auth = new UsernamePasswordAuthenticationToken(configuration.getLogin(), configuration.getPassword());
         return doAs(auth, supplier);
@@ -31,18 +44,5 @@ public class SecurityHelper {
         T result = supplier.get();
         SecurityContextHolder.getContext().setAuthentication(previousAuthentication);
         return result;
-    }
-
-    @SuppressWarnings("unchecked")
-    public static <T> T getPrincipalFromSecurityContext() {
-        return (T) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-    }
-
-    public static <T> T requireRole(SecurityRole role, Supplier<T> supplier) {
-        SecurityContextHolder.getContext().getAuthentication().getAuthorities().stream()
-                .filter(authority -> authority.equals(role.getGrantedAuthority()))
-                .findAny()
-                .orElseThrow(() -> new SecurityException("SecurityContext doesn't have specified role " + role.getRoleString()));
-        return supplier.get();
     }
 }

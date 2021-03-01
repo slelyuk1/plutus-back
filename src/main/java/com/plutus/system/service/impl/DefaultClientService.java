@@ -1,15 +1,12 @@
 package com.plutus.system.service.impl;
 
-import com.plutus.system.model.SecurityRole;
 import com.plutus.system.model.entity.Client;
 import com.plutus.system.model.request.client.CreateClientRequest;
 import com.plutus.system.model.request.client.FindClientRequest;
 import com.plutus.system.repository.ClientRepository;
 import com.plutus.system.service.ClientService;
-import com.plutus.system.utils.SecurityHelper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Example;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 
 import java.util.Collection;

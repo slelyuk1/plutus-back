@@ -17,13 +17,13 @@ public enum SecurityRole {
         grantedAuthority = new SimpleGrantedAuthority(roleName);
     }
 
-    public String getRoleString() {
-        return grantedAuthority.getAuthority();
-    }
-
     public static Optional<SecurityRole> fromString(String roleName) {
         return Arrays.stream(SecurityRole.values())
                 .filter(securityRole -> securityRole.getRoleString().equals(roleName))
                 .findAny();
+    }
+
+    public String getRoleString() {
+        return grantedAuthority.getAuthority();
     }
 }

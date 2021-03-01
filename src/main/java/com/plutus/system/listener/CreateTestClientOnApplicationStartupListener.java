@@ -42,27 +42,6 @@ public class CreateTestClientOnApplicationStartupListener implements Application
     private final AccountService accountService;
     private final SecurityHelper securityHelper;
 
-    @Override
-    public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
-        securityHelper.doAsAdmin(() -> {
-            FindClientRequest findClientRequest = new FindClientRequest();
-            findClientRequest.setEmail(CLIENT_TEST_EMAIL);
-            CreditTariff createdCreditTariff;
-            createdCreditTariff = creditTariffService.createOrModify(createTestCreditTariffRequest());
-            Client createdClient = clientService.findClient(findClientRequest)
-                    .orElseGet(() -> clientService.create(createTestClientRequest()));
-            log.info("Created test client: {}", createdClient);
-
-            FindOneAccountRequest findOneAccountRequest = new FindOneAccountRequest();
-            findOneAccountRequest.setAccountNumber(TEST_NUMBER);
-            Account createdAccount = accountService.findAccount(findOneAccountRequest)
-                    .orElseGet(() -> accountService.create(createAccountRequest(createdClient, createdCreditTariff)));
-            log.info("Created test account: {}", createdAccount);
-            return null;
-
-        });
-    }
-
     private static ModifyOrCreateCreditTariffRequest createTestCreditTariffRequest() {
         ModifyOrCreateCreditTariffRequest request = new ModifyOrCreateCreditTariffRequest();
         request.setName(CREDIT_TARIFF_TEST_NAME);
@@ -86,5 +65,26 @@ public class CreateTestClientOnApplicationStartupListener implements Application
         request.setOwnerId(owner.getId());
         request.setCreditTariffId(creditTariff.getId());
         return request;
+    }
+
+    @Override
+    public void onApplicationEvent(@NonNull ContextRefreshedEvent event) {
+        securityHelper.doAsAdmin(() -> {
+            FindClientRequest findClientRequest = new FindClientRequest();
+            findClientRequest.setEmail(CLIENT_TEST_EMAIL);
+            CreditTariff createdCreditTariff;
+            createdCreditTariff = creditTariffService.createOrModify(createTestCreditTariffRequest());
+            Client createdClient = clientService.findClient(findClientRequest)
+                    .orElseGet(() -> clientService.create(createTestClientRequest()));
+            log.info("Created test client: {}", createdClient);
+
+            FindOneAccountRequest findOneAccountRequest = new FindOneAccountRequest();
+            findOneAccountRequest.setAccountNumber(TEST_NUMBER);
+            Account createdAccount = accountService.findAccount(findOneAccountRequest)
+                    .orElseGet(() -> accountService.create(createAccountRequest(createdClient, createdCreditTariff)));
+            log.info("Created test account: {}", createdAccount);
+            return null;
+
+        });
     }
 }

@@ -31,6 +31,21 @@ public class DefaultTokenService implements JwtTokenService {
         lifeInMs = configuration.getLifeInMs();
     }
 
+    public static Collection<String> grantedAuthoritiesToStrings(Collection<? extends GrantedAuthority> grantedAuthorities) {
+        return grantedAuthorities.stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+    }
+
+    public static Collection<? extends GrantedAuthority> grantedAuthoritiesFromStrings(Collection<String> securityRolesStr) {
+        return securityRolesStr.stream()
+                .map(SecurityRole::fromString)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .map(SecurityRole::getGrantedAuthority)
+                .collect(Collectors.toList());
+    }
+
     @Override
     public boolean validateToken(String authToken) {
         try {
@@ -93,20 +108,5 @@ public class DefaultTokenService implements JwtTokenService {
                 .signWith(SignatureAlgorithm.HS512, jwtSecret)
                 .claim(ROLES_CLAIM_NAME, grantedAuthoritiesToStrings(authentication.getAuthorities()))
                 .compact();
-    }
-
-    public static Collection<String> grantedAuthoritiesToStrings(Collection<? extends GrantedAuthority> grantedAuthorities) {
-        return grantedAuthorities.stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.toList());
-    }
-
-    public static Collection<? extends GrantedAuthority> grantedAuthoritiesFromStrings(Collection<String> securityRolesStr) {
-        return securityRolesStr.stream()
-                .map(SecurityRole::fromString)
-                .filter(Optional::isPresent)
-                .map(Optional::get)
-                .map(SecurityRole::getGrantedAuthority)
-                .collect(Collectors.toList());
     }
 }

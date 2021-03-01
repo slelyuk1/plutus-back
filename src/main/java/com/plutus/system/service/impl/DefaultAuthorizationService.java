@@ -1,7 +1,6 @@
 package com.plutus.system.service.impl;
 
 import com.plutus.system.service.AuthorizationService;
-import com.plutus.system.service.JwtTokenService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.Authentication;

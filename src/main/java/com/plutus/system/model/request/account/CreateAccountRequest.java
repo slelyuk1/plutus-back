@@ -1,7 +1,6 @@
 package com.plutus.system.model.request.account;
 
 import com.plutus.system.validation.annotation.PinCode;
-import com.sun.istack.Nullable;
 import lombok.Data;
 import org.hibernate.validator.constraints.CreditCardNumber;
 
