@@ -52,10 +52,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        // todo enable cors and csrf
         http
-                .csrf().csrfTokenRepository(csrfTokenRepositoryBean()).ignoringAntMatchers(TOKEN_ENDPOINT).disable()
-                .cors().disable()
+                .csrf().csrfTokenRepository(csrfTokenRepositoryBean()).ignoringAntMatchers(TOKEN_ENDPOINT)
+                .and()
+                .cors().and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
